@@ -12,11 +12,23 @@ using namespace std;
 
 //whole code might only work on mac
 
-static void run_python(char* script_name, char* func_name, char* arguments[], int num_arguments){
+static void run_python(const char* script_name)//, const char* func_name, const char* arguments[], int num_arguments)
+{
+    /*
     PyObject *pName, *pModule, *pFunc;
     PyObject *pArgs, *pValue;
     int i = 0;
+    */
+    FILE* fp;
 
+    Py_Initialize();
+
+    fp  = fopen(script_name, "r");
+    PyRun_SimpleFile(fp, script_name);
+
+    fclose(fp);
+    Py_Finalize();
+    /*
     Py_Initialize();
     pName = PyString_FromString(script_name);
     
@@ -24,7 +36,7 @@ static void run_python(char* script_name, char* func_name, char* arguments[], in
 
     if (pModule != NULL) {
         pFunc = PyObject_GetAttrString(pModule, func_name);
-        /* pFunc is a new reference */
+        
 
         if (pFunc && PyCallable_Check(pFunc)) {
             pArgs = PyTuple_New(num_arguments);
@@ -36,7 +48,7 @@ static void run_python(char* script_name, char* func_name, char* arguments[], in
                     fprintf(stderr, "Cannot convert argument\n");
                     
                 }
-                /* pValue reference stolen here: */
+                
                 PyTuple_SetItem(pArgs, i, pValue);
             }
             pValue = PyObject_CallObject(pFunc, pArgs);
@@ -67,11 +79,16 @@ static void run_python(char* script_name, char* func_name, char* arguments[], in
         
     }
     Py_Finalize();
-    
+    */
 
 }
 
 
 int main(){
     
+    const char* script = "multiply.py";
+    const char* func = "multiply";
+    const char* args[] = {"2", "3"};
+
+    run_python(script);//, func, args, 2);
 }
